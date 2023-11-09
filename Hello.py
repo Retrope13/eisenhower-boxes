@@ -15,6 +15,7 @@
 import streamlit as st
 from streamlit.logger import get_logger
 from streamlit_elements import elements, mui, html
+import os
 
 LOGGER = get_logger(__name__)
 
@@ -26,6 +27,7 @@ def run():
       page_title="Hello",
       page_icon="👋",
   )
+  
   
   with elements("dashboard"):
     from streamlit_elements import dashboard
@@ -48,15 +50,21 @@ def run():
         # You can save the layout in a file, or do anything you want with it.
         # You can pass it back to dashboard.Grid() if you want to restore a saved layout.
         print(updated_layout)
+
         
-        
+    def handle_text_create(event):
+        print(event['pageX'])
+        print(event['pageY'])
+        new_element = st.text_area("New Element", key=1)
+        st.markdown(f'<div style="position: relative; left: {event["pageX"]}px; top: {event["pageY"]}px;">Element: {new_element}</div>',
+        unsafe_allow_html=True)
 
     with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
-        mui.Paper("Do It", key="first_item", sx={"bgcolor": "#B3FFB3", "alignContent":"center"}) ##?onDoubleClick to create a new paper? maybe button
-        mui.Paper("Plan It", key="second_item", sx={"bgcolor": "#FBFFB3",})
-        mui.Paper("Delegate It", key="third_item", sx={"bgcolor": "#B3F6FF",})
-        mui.Paper("Drop It", key="fourth_item", sx={"bgcolor": "#FFB9B3",})
-        mui.Paper("Done It", key="fifth_item", sx={"bgcolor": "#B3FFB3",})
+        mui.Paper("Do It", key="first_item", sx={"color":"black", "bgcolor": "#B3FFB3", "alignContent":"center"}, onDoubleClick=handle_text_create) ##?onDoubleClick to create a new paper? maybe button
+        mui.Paper("Plan It", key="second_item", sx={"color":"black", "bgcolor": "#FBFFB3",})
+        mui.Paper("Delegate It", key="third_item", sx={"color":"black", "bgcolor": "#B3F6FF",})
+        mui.Paper("Drop It", key="fourth_item", sx={"color":"black", "bgcolor": "#FFB9B3",})
+        mui.Paper("Done It", key="fifth_item", sx={"color":"black", "bgcolor": "#B3FFB3",})
   
 
 
