@@ -14,37 +14,50 @@
 
 import streamlit as st
 from streamlit.logger import get_logger
+from streamlit_elements import elements, mui, html
 
 LOGGER = get_logger(__name__)
 
 
 def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+  st.set_page_config(
+      layout="wide",
+      initial_sidebar_state="collapsed",
+      page_title="Hello",
+      page_icon="👋",
+  )
+  
+  with elements("dashboard"):
+    from streamlit_elements import dashboard
+    
+    
+    layout = [
+        # Parameters: element_identifier, x_pos, y_pos, width, height, [item properties...]
+        dashboard.Item("first_item", 0, 0, 4, 3),
+        dashboard.Item("second_item", 4, 0, 4, 3),
+        dashboard.Item("third_item", 4, 4, 4, 3),
+        dashboard.Item("fourth_item", 0, 8, 4, 3),
+        dashboard.Item("fifth_item", 8, 0, 4, 6),
+    ]
+    
+    
+    # If you want to retrieve updated layout values as the user move or resize dashboard items,
+    # you can pass a callback to the onLayoutChange event parameter.
 
-    st.write(" # :balloon: Welcome to Streamlit! 👋")
+    def handle_layout_change(updated_layout): ##!I could save this to local storage or something
+        # You can save the layout in a file, or do anything you want with it.
+        # You can pass it back to dashboard.Grid() if you want to restore a saved layout.
+        print(updated_layout)
+        
+        
 
-    st.sidebar.success("Select a demo above.")
-
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
+    with dashboard.Grid(layout, onLayoutChange=handle_layout_change):
+        mui.Paper("Do It", key="first_item", sx={"bgcolor": "#B3FFB3", "alignContent":"center"}) ##?onDoubleClick to create a new paper? maybe button
+        mui.Paper("Plan It", key="second_item", sx={"bgcolor": "#FBFFB3",})
+        mui.Paper("Delegate It", key="third_item", sx={"bgcolor": "#B3F6FF",})
+        mui.Paper("Drop It", key="fourth_item", sx={"bgcolor": "#FFB9B3",})
+        mui.Paper("Done It", key="fifth_item", sx={"bgcolor": "#B3FFB3",})
+  
 
 
 if __name__ == "__main__":
